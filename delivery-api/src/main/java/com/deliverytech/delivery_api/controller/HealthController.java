@@ -22,9 +22,9 @@ public class HealthController {
         return new AppInfo(
                 "Delivery Tech API",
                 "1.0.0",
-                "[Seu Nome]",
-                "JDK 21",
-                "Spring Boot 3.2.x");
+                "Lidia Luzia Messias",
+                "JDK 17",
+                "Spring Boot 3.5.6");
     }
 
     // Record para demonstrar recurso do Java 14+ (disponível no JDK 21)
