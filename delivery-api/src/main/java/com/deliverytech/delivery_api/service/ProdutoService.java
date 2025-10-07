@@ -79,7 +79,7 @@ public class ProdutoService {
         produtoRepository.save(produto);
     }
 
-    // Buscar por faixA de preço
+    // Buscar por faixa de preço
     @Transactional(readOnly = true)
     public List<Produto> buscarPorFaixaPreco(BigDecimal precoMin, BigDecimal precoMax) {
         return produtoRepository.findByPrecoBetweenAndDisponivelTrue(precoMin, precoMax);

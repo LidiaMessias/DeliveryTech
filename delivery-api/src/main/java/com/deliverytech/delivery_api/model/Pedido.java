@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "pedidos") // É uma boa prática definir o nome da tabela
+@Table(name = "pedido") // É uma boa prática definir o nome da tabela
 public class Pedido {
 
     @Id
