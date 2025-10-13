@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliverytech.delivery_api.dto.ClienteDTO;
 import com.deliverytech.delivery_api.model.Cliente;
 import com.deliverytech.delivery_api.service.ClienteService;
 
@@ -43,10 +44,23 @@ public class ClienteController {
         }
     }
 
+    // Listar todos os clientes
+    @GetMapping("/todos")
+    public ResponseEntity<List<ClienteDTO>> listarTodos() {
+        List<ClienteDTO> clientes = clienteService.listarTodos();
+        return ResponseEntity.ok(clientes);
+    }
+
     // Listar todos os clientes ativos
     @GetMapping
-    public ResponseEntity<List<Cliente>> listar() {
-        List<Cliente> clientes = clienteService.listarAtivos();
+    public ResponseEntity<List<ClienteDTO>> listarAtivos() {
+        List<ClienteDTO> clientes = clienteService.listarAtivos();
+        return ResponseEntity.ok(clientes);
+    }
+
+    @GetMapping("/com-pedidos")
+    public ResponseEntity<List<ClienteDTO>> listarAtivosComPedidos() {
+        List<ClienteDTO> clientes = clienteService.listarClientesAtivosComPedidos();
         return ResponseEntity.ok(clientes);
     }
 

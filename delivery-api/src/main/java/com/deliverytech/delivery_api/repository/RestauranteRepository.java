@@ -17,12 +17,15 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
     // Buscar por nome (para validações, por exemplo)
     Optional<Restaurante> findByNome(String nome);
 
-    // Buscar restaurantes a􀆟vos
+    // Buscar restaurantes ativos
     List<Restaurante> findByAtivoTrue();
 
     // Buscar por categoria (corrigido para bater com o que o Service precisa)
     List<Restaurante> findByCategoriaAndAtivoTrue(String categoria);
 
+    // Por taxa de entrega menor ou igual
+    List<Restaurante> findByTaxaEntregaLessThanEqual(BigDecimal taxa);
+    
     // Buscar por nome contendo (case insensitive)
     List<Restaurante> findByNomeContainingIgnoreCaseAndAtivoTrue(String nome);
 
@@ -31,6 +34,15 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
     // Ordenar por avaliação (descendente)
     List<Restaurante> findByAtivoTrueOrderByAvaliacaoDesc();
+
+    // Relatório de vendas por restaurante
+    @Query("SELECT r.nome as nomeRestaurante, " +
+        "SUM(p.valorTotal) as totalVendas, " +
+        "COUNT(p.id) as quantidadePedidos " +
+        "FROM Restaurante r " +
+        "LEFT JOIN Pedido p ON r.id = p.restaurante.id " +
+        "GROUP BY r.id, r.nome")
+    List<RelatorioVendas> relatorioVendasPorRestaurante();
 
     // Query customizada - restaurantes com produtos
     @Query("SELECT DISTINCT r FROM Restaurante r JOIN r.produtos p WHERE r.ativo = true")

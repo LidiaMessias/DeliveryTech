@@ -1,6 +1,5 @@
 package com.deliverytech.delivery_api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;    
 import java.math.BigDecimal;
@@ -25,7 +24,6 @@ public class Produto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id", nullable = false)
-    @JsonIgnore
     private Restaurante restaurante;
 
     @OneToMany(mappedBy = "produto")

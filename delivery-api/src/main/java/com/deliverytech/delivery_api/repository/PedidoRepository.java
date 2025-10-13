@@ -17,45 +17,82 @@ import com.deliverytech.delivery_api.model.StatusPedido;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    // Buscar pedidos por cliente
-    List<Pedido> findByClienteOrderByDataPedidoDesc(Cliente cliente);
+        // Buscar pedidos por cliente
+        List<Pedido> findByClienteOrderByDataPedidoDesc(Cliente cliente);
 
-    // Buscar pedidos por cliente ID
-    List<Pedido> findByClienteIdOrderByDataPedidoDesc(Long clienteId);
+        // Buscar pedidos por cliente ID
+        List<Pedido> findByClienteIdOrderByDataPedidoDesc(Long clienteId);
 
-    // Buscar por status
-    List<Pedido> findByStatusOrderByDataPedidoDesc(StatusPedido status);
+        // Buscar por status
+        List<Pedido> findByStatusOrderByDataPedidoDesc(StatusPedido status);
 
-    // Buscar por número do pedido
-    Optional<Pedido> findById(Long id);
+        // Buscar por número do pedido
+        Optional<Pedido> findById(Long id);
 
-    // Buscar pedidos por período
-    List<Pedido> findByDataPedidoBetweenOrderByDataPedidoDesc(LocalDateTime inicio,
-            LocalDateTime fim);
+        // Buscar pedidos por período
+        List<Pedido> findByDataPedidoBetweenOrderByDataPedidoDesc(LocalDateTime inicio,
+                        LocalDateTime fim);
 
-    /*Buscar pedidos do dia
-    @Query("SELECT p FROM Pedido p WHERE DATE(p.dataPedido) = CURRENT_DATE ORDER BY p.dataPedido DESC")
-    List<Pedido> findPedidosDoDia();  */ 
+        // Relatório - total de vendas por restaurante
+        @Query("SELECT p.restaurante.nome, SUM(p.valorTotal) " +
+                        "FROM Pedido p " +
+                        "GROUP BY p.restaurante.id, p.restaurante.nome " +
+                        "ORDER BY SUM(p.valorTotal) DESC")
+        List<Object[]> calcularTotalVendasPorRestaurante();
 
-    // Buscar pedidos por restaurante
-    @Query
-    ("SELECT p FROM Pedido p WHERE p.restaurante.id = :restauranteId ORDER BY p.dataPedido DESC")List<Pedido> findByRestauranteId(
-            @Param("restauranteId") Long restauranteId);
+        // Buscar pedidos com valor total acima de um determinado valor
+        @Query("SELECT p FROM Pedido p WHERE p.valorTotal > :valor ORDER BY p.valorTotal DESC")
+        List<Pedido> buscarPedidosComValorAcimaDe(@Param("valor") BigDecimal valor);
 
-    // Relatório - pedidos por status
-    @Query("SELECT p.status, COUNT(p) FROM Pedido p GROUP BY p.status")
-    List<Object[]> countPedidosByStatus();
+        // Relatório de pedidos por período
+        @Query("SELECT p FROM Pedido p " +
+                        "WHERE p.dataPedido BETWEEN :inicio AND :fim " +
+                        "AND p.status = :status " +
+                        "ORDER BY p.dataPedido DESC")
+        List<Pedido> relatorioPedidosPorPeriodoEStatus(
+                        @Param("inicio") LocalDateTime inicio,
+                        @Param("fim") LocalDateTime fim,
+                        @Param("status") StatusPedido status
+        );
 
-    // Pedidos pendentes (para dashboard)
-    @Query
-    ("SELECT p FROM Pedido p WHERE p.status IN ('PENDENTE', 'CONFIRMADO','PREPARANDO')" +"ORDER BY p.dataPedido ASC")
-    List<Pedido> findPedidosPendentes();
+        /*
+        Buscar pedidos do dia
+        
+        @Query("SELECT p FROM Pedido p WHERE DATE(p.dataPedido) = CURRENT_DATE ORDER BY p.dataPedido DESC"
+        )
+        List<Pedido> findPedidosDoDia();
+         
+        // Buscar pedidos por restaurante
+         
+        @Query
+        ("SELECT p FROM Pedido p WHERE p.restaurante.id = :restauranteId ORDER BY p.dataPedido DESC"
+        )
+        List<Pedido> findByRestauranteId(
+         
+        @Param("restauranteId") Long restauranteId);
+         
+        // Relatório - pedidos por status
+        
+        @Query("SELECT p.status, COUNT(p) FROM Pedido p GROUP BY p.status")
+        List<Object[]> countPedidosByStatus();
+        
+        // Pedidos pendentes (para dashboard)
+         
+        @Query
+        ("SELECT p FROM Pedido p WHERE p.status IN ('PENDENTE', 'CONFIRMADO','PREPARANDO')"
+        +"ORDER BY p.dataPedido ASC")
+        List<Pedido> findPedidosPendentes();
+        */
+         
+        // Valor total de vendas por período
 
-    // Valor total de vendas por período
-    @Query
-    ("SELECT SUM(p.valorTotal) FROM Pedido p WHERE p.dataPedido BETWEEN :inicio AND :fim AND p.status <> com.deliverytech.delivery_api.model.StatusPedido.CANCELADO")
-        BigDecimal calcularVendasPorPeriodo(
-            @Param("inicio") LocalDateTime inicio,
-            @Param("fim") LocalDateTime fim);
-
+        @Query
+        ("SELECT SUM(p.valorTotal) FROM Pedido p WHERE p.dataPedido BETWEEN :inicio AND :fim AND p.status = :status ORDER BY p.dataPedido DESC"
+        )
+        BigDecimal calcularVendasPorPeriodo(      
+                @Param("inicio") LocalDateTime inicio, 
+                @Param("fim") LocalDateTime fim,
+                @Param("status") StatusPedido status
+        );
+         
 }

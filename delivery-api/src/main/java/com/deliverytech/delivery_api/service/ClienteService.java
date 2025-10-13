@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliverytech.delivery_api.dto.ClienteDTO;
+import com.deliverytech.delivery_api.mapper.ClienteMapper;
 import com.deliverytech.delivery_api.model.Cliente;
 import com.deliverytech.delivery_api.repository.ClienteRepository;
 
@@ -16,6 +18,9 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private ClienteMapper clienteMapper;
 
     // Cadastrar novo cliente
     public Cliente cadastrar(Cliente cliente) {
@@ -42,10 +47,29 @@ public class ClienteService {
         return clienteRepository.findByEmail(email);
     }
 
+    // Listar todos os clientes
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> listarTodos() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        return clienteMapper.toClienteDTOList(clientes);
+    }
+
     // Listar todos os clientes ativos
     @Transactional(readOnly = true)
-    public List<Cliente> listarAtivos() {
-        return clienteRepository.findByAtivoTrue();
+    public List<ClienteDTO> listarAtivos() {
+        List<Cliente> clientes = clienteRepository.findByAtivoTrue();
+        return clienteMapper.toClienteDTOList(clientes);
+    }
+
+    // Listar clientes com pedidos
+    /*@Transactional(readOnly = true)
+    public List<Cliente> listarClientesAtivosComPedidos() {
+        return clienteRepository.findByAtivoTrueWithPedidos();
+    }*/
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> listarClientesAtivosComPedidos() {
+        List<Cliente> clientes = clienteRepository.findByAtivoTrueWithPedidos();
+        return clienteMapper.toClienteDTOList(clientes);
     }
 
     // Atualizar dados do cliente
