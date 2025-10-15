@@ -55,6 +55,16 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
                         @Param("status") StatusPedido status
         );
 
+        // Total de vendas por período
+        @Query
+        ("SELECT SUM(p.valorTotal) FROM Pedido p WHERE p.dataPedido BETWEEN :inicio AND :fim AND p.status = :status ORDER BY p.dataPedido DESC"
+        )
+        BigDecimal calcularVendasPorPeriodo(      
+                @Param("inicio") LocalDateTime inicio, 
+                @Param("fim") LocalDateTime fim,
+                @Param("status") StatusPedido status
+        );
+
         /*
         Buscar pedidos do dia
         
@@ -86,13 +96,5 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
          
         // Valor total de vendas por período
 
-        @Query
-        ("SELECT SUM(p.valorTotal) FROM Pedido p WHERE p.dataPedido BETWEEN :inicio AND :fim AND p.status = :status ORDER BY p.dataPedido DESC"
-        )
-        BigDecimal calcularVendasPorPeriodo(      
-                @Param("inicio") LocalDateTime inicio, 
-                @Param("fim") LocalDateTime fim,
-                @Param("status") StatusPedido status
-        );
          
 }

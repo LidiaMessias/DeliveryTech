@@ -67,7 +67,7 @@ public class PedidoService {
             throw new IllegalArgumentException("Produto não disponível: " + produto.getNome());
         }
         if (quantidade <= 0) {
-            throw new IllegalArgumentException("Quan􀆟dade deve ser maior que zero");
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
         }
         // Verificar se produto pertence ao mesmo restaurante do pedido
         if (!produto.getRestaurante().equals(pedido.getRestaurante())) {

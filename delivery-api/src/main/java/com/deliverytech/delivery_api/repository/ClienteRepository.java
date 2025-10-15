@@ -12,6 +12,9 @@ import com.deliverytech.delivery_api.model.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+    // Buscar cliente por Id
+    Optional<Cliente> findById(Long id);
+
     // Buscar cliente por email (método derivado)
     Optional<Cliente> findByEmail(String email);
 

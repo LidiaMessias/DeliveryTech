@@ -14,6 +14,9 @@ import com.deliverytech.delivery_api.model.Restaurante;
 @Repository
 public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 
+    // Buscar por ID
+    Optional<Restaurante> findById(Long id);
+
     // Buscar por nome (para validações, por exemplo)
     Optional<Restaurante> findByNome(String nome);
 

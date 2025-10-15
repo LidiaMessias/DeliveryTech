@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import com.deliverytech.delivery_api.model.Cliente;
 import com.deliverytech.delivery_api.model.Restaurante;
 import com.deliverytech.delivery_api.repository.ClienteRepository;
-import com.deliverytech.delivery_api.repository.PedidoRepository;
-import com.deliverytech.delivery_api.repository.ProdutoRepository;
+//import com.deliverytech.delivery_api.repository.PedidoRepository;
+//import com.deliverytech.delivery_api.repository.ProdutoRepository;
 import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
 @Component
@@ -20,11 +20,11 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private RestauranteRepository restauranteRepository;
 
-    @Autowired
+    /*@Autowired
     private ProdutoRepository produtoRepository;
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private PedidoRepository pedidoRepository;*/
 
     @Override
     public void run(String... args) throws Exception {

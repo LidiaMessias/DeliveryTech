@@ -31,7 +31,6 @@ public class ItemPedido {
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
 
-    @NotNull(message = "A quantidade é obrigatória")
     @Positive(message = "A quantidade deve ser positiva")
     @Column(nullable = false)
     private Integer quantidade;
