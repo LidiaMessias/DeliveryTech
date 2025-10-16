@@ -29,5 +29,5 @@ public class ProdutoDTO {
     @NotNull(message = "Restaurante é obrigatório")
     private Long restauranteId;
 
-    //private boolean disponivel;
+    private boolean disponivel;
 }
