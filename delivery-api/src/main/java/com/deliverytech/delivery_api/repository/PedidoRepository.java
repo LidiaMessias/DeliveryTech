@@ -18,9 +18,12 @@ import com.deliverytech.delivery_api.model.StatusPedido;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
         // Buscar pedidos por cliente
+        List<Pedido> findByClienteId(Long clienteId);
+
+        // Buscar pedidos por cliente e ordenar por data
         List<Pedido> findByClienteOrderByDataPedidoDesc(Cliente cliente);
 
-        // Buscar pedidos por cliente ID
+        // Buscar pedidos por cliente ID e ordenar por data
         List<Pedido> findByClienteIdOrderByDataPedidoDesc(Long clienteId);
 
         // Buscar por status

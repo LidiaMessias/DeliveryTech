@@ -18,7 +18,9 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime dataPedido;
+    @Builder.Default
+    private LocalDateTime dataPedido = LocalDateTime.now();
+
     private String enderecoEntrega;
     private BigDecimal subtotal;
     private BigDecimal taxaEntrega;
