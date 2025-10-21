@@ -83,8 +83,9 @@ public class ClienteController {
         
     }
 
-    
-    /* 
+}
+
+ /* 
     // Listar todos os clientes
     @GetMapping("/todos")
     public ResponseEntity<List<ClienteDTO>> listarTodos() {
@@ -104,6 +105,4 @@ public class ClienteController {
         List<Cliente> clientes = clienteService.buscarPorNome(nome);
         return ResponseEntity.ok(clientes);
     }
-    */
-
-}
+*/

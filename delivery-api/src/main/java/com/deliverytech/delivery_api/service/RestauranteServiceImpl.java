@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +63,7 @@ public class RestauranteServiceImpl implements RestauranteService {
     @Override
     @Transactional(readOnly = true)
     public List<RestauranteResponseDTO> buscarRestaurantesPorCategoria(String categoria){
-        List<Restaurante> restaurantes = restauranteRepository.findByCategoriaAndAtivoTrue(categoria);
+        List<Restaurante> restaurantes = restauranteRepository.findByCategoria(categoria);
 
         return restaurantes.stream()
             .map(restaurante -> modelMapper.map(restaurante, RestauranteResponseDTO.class))
@@ -78,7 +81,33 @@ public class RestauranteServiceImpl implements RestauranteService {
             .collect(Collectors.toList());
     }
 
+    // Listar restaurantes por filtro
+    @Override
+    @Transactional(readOnly = true)
+    public Page<RestauranteResponseDTO> listarRestaurantes(String categoria, Boolean ativo, Pageable pageable) {
+        // Se não há filtros, aproveita paginação no repositório
+        if (categoria == null && ativo == null) {
+            Page<Restaurante> page = restauranteRepository.findAll(pageable);
+            return page.map(restaurante -> modelMapper.map(restaurante, RestauranteResponseDTO.class));
+        }
 
+        // Caso haja filtro, busca todos e filtra em memória (substituir por queries paginadas para produção)
+        List<Restaurante> all = restauranteRepository.findAll();
+
+        List<RestauranteResponseDTO> filtered = all.stream()
+            .filter(r -> categoria == null || (r.getCategoria() != null && r.getCategoria().equalsIgnoreCase(categoria)))
+            .filter(r -> ativo == null || r.isAtivo() == ativo)
+            .map(r -> modelMapper.map(r, RestauranteResponseDTO.class))
+            .collect(Collectors.toList());
+
+        int total = filtered.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), total);
+        List<RestauranteResponseDTO> content = start > end ? List.of() : filtered.subList(start, end);
+
+        return new PageImpl<>(content, pageable, total);
+    }
+   
     // Atualizar dados do restaurante
     @Override
     public RestauranteResponseDTO atualizarRestaurante(Long id, RestauranteDTO dto){
@@ -103,6 +132,22 @@ public class RestauranteServiceImpl implements RestauranteService {
         return modelMapper.map(restauranteAtualizado, RestauranteResponseDTO.class);
     }
 
+    @Override
+    @Transactional 
+    public RestauranteResponseDTO alterarStatusRestaurante(Long id) {
+        
+        Restaurante restaurante = restauranteRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Restaurante não encontrado com ID " + id));
+
+        // Alternar o status 
+        boolean novoStatus = !restaurante.isAtivo();
+        restaurante.setAtivo(novoStatus);
+
+        Restaurante restauranteAtualizado = restauranteRepository.save(restaurante);
+        return modelMapper.map(restauranteAtualizado, RestauranteResponseDTO.class);
+        
+    }
+
     // VALIDAÇÕES DE NEGÓCIO
     private void validarDadosRestaurante(RestauranteDTO restaurante) {
         if (restaurante.getNome() == null || restaurante.getNome().trim().isEmpty()) {
@@ -115,14 +160,17 @@ public class RestauranteServiceImpl implements RestauranteService {
         }
     }
 
-    /* 
-    // Inativar restaurante
-    public void inativar(Long id) {
-        Restaurante restaurante = buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado com ID: " + id));
-        restaurante.setAtivo(false);
-        restauranteRepository.save(restaurante);
-    }
-    */
-
 }
+
+ /*
+    // Listar restaurantes por categoria e ativos
+    @Override
+    @Transactional(readOnly = true)
+    public List<RestauranteResponseDTO> listarRestaurantes(String categoria, Boolean ativo){
+        List<Restaurante> restaurantes = restauranteRepository.findByCategoriaAndAtivoTrue(categoria, ativo);
+
+        return restaurantes.stream()
+            .map(restaurante -> modelMapper.map(restaurante, RestauranteResponseDTO.class))
+            .collect(Collectors.toList());
+    }
+*/

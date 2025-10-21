@@ -109,7 +109,7 @@ public class DataLoader implements CommandLineRunner {
         var restaurantesAtivos = restauranteRepository.findByAtivoTrue();
         System.out.println("\nRestaurantes ativos: " + restaurantesAtivos.size());
 
-        var restaurantesPorCategoria = restauranteRepository.findByCategoriaAndAtivoTrue("Italiana");
+        var restaurantesPorCategoria = restauranteRepository.findByCategoria("Italiana");
         System.out.println("Restaurantes na categoria Italiana: " + restaurantesPorCategoria.size());
 
         var restaurantesPorTaxa = restauranteRepository.findByTaxaEntregaLessThanEqual(new java.math.BigDecimal("6.00"));

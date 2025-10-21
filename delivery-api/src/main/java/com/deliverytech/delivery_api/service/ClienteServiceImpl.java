@@ -110,6 +110,7 @@ public class ClienteServiceImpl implements ClienteService {
             .collect(Collectors.toList());
     }
 
+}
 
     /* 
     // Listar todos os clientes
@@ -118,8 +119,7 @@ public class ClienteServiceImpl implements ClienteService {
         List<Cliente> clientes = clienteRepository.findAll();
         return clienteMapper.toClienteDTOList(clientes);
     }
-
-    
+ 
     // Listar clientes com pedidos
     /*@Transactional(readOnly = true)
     public List<Cliente> listarClientesAtivosComPedidos() {
@@ -130,7 +130,6 @@ public class ClienteServiceImpl implements ClienteService {
         List<Cliente> clientes = clienteRepository.findByAtivoTrueWithPedidos();
         return clienteMapper.toClienteDTOList(clientes);
     }
-
 
     // Buscar clientes por nome
     @Transactional(readOnly = true)
@@ -154,4 +153,3 @@ public class ClienteServiceImpl implements ClienteService {
         }
     }
     */
-}

@@ -81,6 +81,8 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
 
+}
+
     /* 
     // Buscar por faixa de preço
     @GetMapping("/faixa-preco")
@@ -100,4 +102,3 @@ public class ProdutoController {
         }
     }
     */
-}

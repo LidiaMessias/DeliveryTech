@@ -23,6 +23,9 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
     // Buscar restaurantes ativos
     List<Restaurante> findByAtivoTrue();
 
+    // Buscar restaurantes por categoria
+    List<Restaurante> findByCategoria(String categoria);
+
     // Buscar por categoria (corrigido para bater com o que o Service precisa)
     List<Restaurante> findByCategoriaAndAtivoTrue(String categoria);
 
