@@ -1,6 +1,6 @@
 package com.deliverytech.delivery_api.repository;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.deliverytech.delivery_api.dto.ClienteAtivoDTO;
-import com.deliverytech.delivery_api.dto.PedidoPeriodoDTO;
-import com.deliverytech.delivery_api.dto.ProdutoMaisVendidoDTO;
-import com.deliverytech.delivery_api.dto.VendasRestauranteDTO;
 import com.deliverytech.delivery_api.model.Cliente;
 import com.deliverytech.delivery_api.model.Pedido;
 import com.deliverytech.delivery_api.model.StatusPedido;
@@ -53,42 +49,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         // Buscar pedidos por status e período
         Page<Pedido> findByStatusAndDataPedidoBetween(StatusPedido status, LocalDateTime dataInicio, LocalDateTime dataFim, Pageable pageable);
 
-        // Queries para os Relatórios
-        // Relatório - Total de vendas por restaurante
-        @Query("SELECT new com.deliverytech.delivery_api.dto.VendasRestauranteDTO(r.nome, COUNT(p), SUM(p.valorTotal)) " +
-           "FROM Pedido p JOIN p.restaurante r " +
-           "GROUP BY r.id, r.nome " +
-           "ORDER BY SUM(p.valorTotal) DESC")
-        List<VendasRestauranteDTO> findVendasAgrupadasPorRestaurante();
+        // Relatório - total de vendas por restaurante
+        @Query("SELECT p.restaurante.nome, SUM(p.valorTotal) " +
+                        "FROM Pedido p " +
+                        "GROUP BY p.restaurante.id, p.restaurante.nome " +
+                        "ORDER BY SUM(p.valorTotal) DESC")
+        List<Object[]> calcularTotalVendasPorRestaurante();
 
-        // Relatório dos produtos mais vendidos
-        @Query("SELECT new com.deliverytech.delivery_api.dto.ProdutoMaisVendidoDTO(pr.produto.nome, SUM(pr.quantidade)) " +
-           "FROM Pedido p JOIN p.itens pr " +
-           "GROUP BY pr.produto.id, pr.produto.nome " +
-           "ORDER BY SUM(pr.quantidade) DESC")
-        List<ProdutoMaisVendidoDTO> findProdutosMaisVendidos();
-
-        // Relatório de clientes mais ativos
-        @Query("SELECT new com.deliverytech.delivery_api.dto.ClienteAtivoDTO(c.nome, COUNT(p), SUM(p.valorTotal)) " +
-           "FROM Pedido p JOIN p.cliente c " +
-           "GROUP BY c.id, c.nome " +
-           "ORDER BY COUNT(p) DESC")
-        List<ClienteAtivoDTO> findClientesMaisAtivos();
-
-        // Relatóro de pedidos por período
-        @Query("SELECT new com.deliverytech.delivery_api.dto.PedidoPeriodoDTO(p.data, COUNT(p), SUM(p.valorTotal)) " +
-           "FROM Pedido p " +
-           "WHERE p.data BETWEEN :dataInicio AND :dataFim " +
-           "GROUP BY p.data " +
-           "ORDER BY p.data")
-        List<PedidoPeriodoDTO> findPedidosPorPeriodo(
-                @Param("dataInicio") LocalDate dataInicio, 
-                @Param("dataFim") LocalDate dataFim);
-
-}
-
-
-        /*
         // Buscar pedidos com valor total acima de um determinado valor
         @Query("SELECT p FROM Pedido p WHERE p.valorTotal > :valor ORDER BY p.valorTotal DESC")
         List<Pedido> buscarPedidosComValorAcimaDe(@Param("valor") BigDecimal valor);
@@ -114,7 +81,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
                 @Param("status") StatusPedido status
         );
 
-        
+        /*
         Buscar pedidos do dia
         
         @Query("SELECT p FROM Pedido p WHERE DATE(p.dataPedido) = CURRENT_DATE ORDER BY p.dataPedido DESC"
@@ -142,7 +109,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         +"ORDER BY p.dataPedido ASC")
         List<Pedido> findPedidosPendentes();
         */
-
+         
+        // Valor total de vendas por período
 
          
-
+}
