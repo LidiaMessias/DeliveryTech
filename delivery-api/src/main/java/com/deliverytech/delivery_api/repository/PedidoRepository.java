@@ -1,6 +1,6 @@
 package com.deliverytech.delivery_api.repository;
 
-import java.time.LocalDate;
+//import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -76,14 +76,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         List<ClienteAtivoDTO> findClientesMaisAtivos();
 
         // Relatóro de pedidos por período
-        @Query("SELECT new com.deliverytech.delivery_api.dto.PedidoPeriodoDTO(p.data, COUNT(p), SUM(p.valorTotal)) " +
+        @Query("SELECT new com.deliverytech.delivery_api.dto.PedidoPeriodoDTO(CAST(p.dataPedido AS java.time.LocalDate), COUNT(p), SUM(p.valorTotal)) " +
            "FROM Pedido p " +
-           "WHERE p.data BETWEEN :dataInicio AND :dataFim " +
-           "GROUP BY p.data " +
-           "ORDER BY p.data")
-        List<PedidoPeriodoDTO> findPedidosPorPeriodo(
-                @Param("dataInicio") LocalDate dataInicio, 
-                @Param("dataFim") LocalDate dataFim);
+           "WHERE p.dataPedido BETWEEN :dataInicio AND :dataFim " +
+           "GROUP BY CAST(p.dataPedido AS java.time.LocalDate) " +
+           "ORDER BY CAST(p.dataPedido AS java.time.LocalDate)")
+        List<PedidoPeriodoDTO> calcularPedidosPorPeriodo(
+                @Param("dataInicio") LocalDateTime dataInicio, 
+                @Param("dataFim") LocalDateTime dataFim);
 
 }
 

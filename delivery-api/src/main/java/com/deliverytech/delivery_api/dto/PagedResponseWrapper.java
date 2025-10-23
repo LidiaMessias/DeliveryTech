@@ -92,7 +92,7 @@ public class PagedResponseWrapper<T> {
         @Schema(description = "Link para primeira página")
         private String first;
 
-        @Schema(description = "Link para úl􀆟ma página")
+        @Schema(description = "Link para última página")
         private String last;
 
         @Schema(description = "Link para próxima página")
