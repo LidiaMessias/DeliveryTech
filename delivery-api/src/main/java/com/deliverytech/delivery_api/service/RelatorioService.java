@@ -3,6 +3,8 @@ package com.deliverytech.delivery_api.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.deliverytech.delivery_api.dto.ClienteAtivoDTO;
 import com.deliverytech.delivery_api.dto.PedidoPeriodoDTO;
 import com.deliverytech.delivery_api.dto.ProdutoMaisVendidoDTO;
@@ -12,6 +14,7 @@ import com.deliverytech.delivery_api.repository.PedidoRepository;
 import com.deliverytech.delivery_api.repository.ProdutoRepository;
 import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
+@Service
 public class RelatorioService {
 
     private final PedidoRepository pedidoRepository;

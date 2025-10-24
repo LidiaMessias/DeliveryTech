@@ -39,6 +39,7 @@ public class RelatorioController {
         this.relatorioService = relatorioService;
     }
 
+    // Relatório de vendas por restaurante
     @GetMapping("/vendas-por-restaurante")
     @Operation(summary = "Total de vendas do restaurante", description = "Soma todos os pedidos de um restaurante")
     @ApiResponses({
@@ -53,6 +54,7 @@ public class RelatorioController {
         return ResponseEntity.ok(response);
     }
 
+    // Relatório dos produtos mais vendidos
     @GetMapping("/produtos-mais-vendidos")
     @Operation(summary = "Ranking dos produtos mais vendidos", description = "Relatório com os produtos mais vendidos")
     @ApiResponses({
@@ -66,6 +68,7 @@ public class RelatorioController {
         return ResponseEntity.ok(response);
     }
 
+    // Relatório dos clientes mais ativos
     @GetMapping("/clientes-ativos")
     @Operation(summary = "Relatório dos clientes mais ativos", description = "Lista os clientes que mais efetuam compras")
     @ApiResponses({
@@ -78,6 +81,7 @@ public class RelatorioController {
         return ResponseEntity.ok(response);
     }
 
+    // Relatório de pedidos por período
     @GetMapping("/pedidos-por-periodo")
     @Operation(summary = "Relatório de pedidos por período", description = "Lista os pedidos dentro de um determinado período")
     @ApiResponses({

@@ -1,11 +1,25 @@
 package com.deliverytech.delivery_api.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Status do pedido")
 public enum StatusPedido {
-    PENDENTE,          // O pedido foi criado pelo cliente, mas ainda não foi confirmado pelo restaurante.
-    CONFIRMADO,      // O restaurante aceitou o pedido.
-    PREPARANDO,      // O pedido está sendo preparado.
-    SAIU_PARA_ENTREGA, // O pedido está a caminho do cliente.
-    ENTREGUE,        // O pedido foi entregue com sucesso.
-    CANCELADO        // O pedido foi cancelado.
+    @Schema(description = "Pedido criado, aguardando confirmação")
+    PENDENTE,    
+    
+    @Schema(description = "Pedido confirmado")
+    CONFIRMADO,  
+    
+    @Schema(description = "Pedido em preparo na cozinha")
+    PREPARANDO, 
+
+    @Schema(description = "Pedido saiu para entrega")
+    SAIU_PARA_ENTREGA,
+
+    @Schema(description = "Pedido entregue ao cliente")
+    ENTREGUE,        
+
+    @Schema(description = "Pedido cancelado")
+    CANCELADO        
 }
 

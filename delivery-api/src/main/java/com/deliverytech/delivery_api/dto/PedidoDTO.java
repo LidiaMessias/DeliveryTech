@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@Schema(description = "Dados para cadastrar um pedido")
 public class PedidoDTO {
     //private Long id;
 

@@ -40,7 +40,7 @@ public class RestauranteDTO {
 
     
     /* 
-    @Schema(description = "Tempo es􀆟mado de entrega em minutos", example = "45", minimum = "10", maximum = "120")
+    @Schema(description = "Tempo estimado de entrega em minutos", example = "45", minimum = "10", maximum = "120")
     @NotNull(message = "Tempo de entrega é obrigatório")
     @Min(value = 10, message = "Tempo mínimo é 10 minutos")
     @Max(value = 120, message = "Tempo máximo é 120 minutos")
