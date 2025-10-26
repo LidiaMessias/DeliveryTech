@@ -27,6 +27,10 @@ public class Pedido {
     private BigDecimal valorTotal;
     private String observacoes;
 
+    private String cep;
+    private String formaPagamento;
+
+
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 

@@ -43,6 +43,8 @@ public class ItemPedido {
     @Column(nullable = false)
     private BigDecimal subtotal = BigDecimal.ZERO;
 
+    private String observacoes;
+
     // Calcula o subtotal do item
     public void calcularSubtotal() {
         if (precoUnitario != null && quantidade != null) {

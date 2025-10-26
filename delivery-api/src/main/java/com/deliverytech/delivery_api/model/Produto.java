@@ -21,6 +21,7 @@ public class Produto {
     private String categoria; // <-- CAMPO ADICIONADO
     private BigDecimal preco; // <-- TIPO CORRIGIDO PARA BIGDECIMAL
     private boolean disponivel; // <-- CAMPO ADICIONADO
+    private String imagemUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id", nullable = false)

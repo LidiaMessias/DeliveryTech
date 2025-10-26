@@ -4,6 +4,8 @@ package com.deliverytech.delivery_api.dto;
 //import java.time.LocalDateTime;
 import java.util.List;
 
+//import com.deliverytech.delivery_api.validation.ValidCEP;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 //import com.deliverytech.delivery_api.model.StatusPedido;
@@ -12,6 +14,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+//import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -22,10 +26,12 @@ public class PedidoDTO {
 
     @Schema(description = "Id do cliente", example = "15", required = true)
     @NotNull(message = "Cliente é obrigatório")
+    @Positive(message = "Cliente ID deve ser positivo")
     private Long clienteId; // Referencia apenas o ID do cliente
 
     @Schema(description = "Id do restaurante", example = "7", required = true)
     @NotNull(message = "Restaurante é obrigatório")
+    @Positive(message = "Cliente ID deve ser positivo")
     private Long restauranteId;
 
     @Schema(description = "Endereço completo para entrega do pedido", example = "Rua das Flores, 123 - Centro",  required = true)
@@ -38,7 +44,20 @@ public class PedidoDTO {
     @Valid
     private List<ItemPedidoDTO> itens;
 
-    /* 
+    /*
+    @NotBlank(message = "CEP é obrigatório")
+    @ValidCEP
+    private String cep;
+
+    @Size(max = 500, message = "Observações não podem exceder 500 caracteres")
+    private String observacoes;
+
+    @NotBlank(message = "Forma de pagamento é obrigatória")
+    @Pattern(regexp = "^(DINHEIRO|CARTAO_CREDITO|CARTAO_DEBITO|PIX)$",
+    message = "Forma de pagamento deve ser: DINHEIRO, CARTAO_CREDITO, CARTAO_DEBITO ou PIX")
+    private String formaPagamento;
+
+     
     private LocalDateTime dataPedido;
     private StatusPedido status;
     private BigDecimal valorTotal;
