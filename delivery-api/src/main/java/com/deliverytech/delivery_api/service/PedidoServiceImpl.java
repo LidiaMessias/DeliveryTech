@@ -109,9 +109,11 @@ public class PedidoServiceImpl implements PedidoService{
         pedido.setDataPedido(LocalDateTime.now());
         pedido.setStatus(StatusPedido.PENDENTE);
         pedido.setEnderecoEntrega(pedidoDto.getEnderecoEntrega());
+        pedido.setCep(pedidoDto.getCep());
         pedido.setSubtotal(subtotal);
         pedido.setTaxaEntrega(taxaEntrega);
         pedido.setValorTotal(valorTotal);
+        pedido.setFormaPagamento(pedidoDto.getFormaPagamento());
 
         Pedido pedidoSalvo = pedidoRepository.save(pedido);
 

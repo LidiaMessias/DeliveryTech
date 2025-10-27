@@ -20,5 +20,7 @@ public class PedidoResponseDTO {
     private BigDecimal valorTotal;
     private String observacoes;
     private List<ItemPedidoDTO> itens;
+    private String cep;
+    private String formaPagamento;
     
 }

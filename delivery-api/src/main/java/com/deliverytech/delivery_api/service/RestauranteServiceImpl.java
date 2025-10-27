@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deliverytech.delivery_api.dto.RestauranteDTO;
 import com.deliverytech.delivery_api.dto.RestauranteResponseDTO;
 import com.deliverytech.delivery_api.exception.BusinessException;
+import com.deliverytech.delivery_api.exception.ConflictException;
 import com.deliverytech.delivery_api.model.Restaurante;
 import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
@@ -35,7 +36,7 @@ public class RestauranteServiceImpl implements RestauranteService {
     public RestauranteResponseDTO cadastrarRestaurante(RestauranteDTO restauranteDto) {
         // Validar nome único
         if (restauranteRepository.findByNome(restauranteDto.getNome()).isPresent()) {
-            throw new IllegalArgumentException("Restaurante já cadastrado: " + restauranteDto.getNome());
+            throw new ConflictException("Já existe um restaurante cadastrado com esse nome: " + restauranteDto.getNome());
         }
 
         // validarDadosRestaurante(restaurante);
