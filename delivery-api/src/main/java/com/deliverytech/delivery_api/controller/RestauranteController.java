@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,7 @@ public class RestauranteController {
 
     // Cadastrar um novo restaurante
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cadastrar restaurante", description = "Cria um novo restaurante no sistema" )
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Restaurante criado com sucesso"),
@@ -101,6 +103,7 @@ public class RestauranteController {
 
     // Atualizar dados do restaurante
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('RESTAURANTE') and @restauranteService.isOwner(#id))")
     @Operation(summary = "Atualizar restaurante", description = "Atualiza os dados de um restaurante existente")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Restaurante atualizado com sucesso"),

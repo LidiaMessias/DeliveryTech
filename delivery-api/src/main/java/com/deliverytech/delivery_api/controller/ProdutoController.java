@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,7 @@ public class ProdutoController {
 
     // Cadastrar um novo produto
     @PostMapping
+    @PreAuthorize("hasRole('RESTAURANTE') or hasRole('ADMIN')")
     @Operation(summary = "Cadastrar produto", description = "Cria um novo produto no sistema")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
@@ -91,6 +93,7 @@ public class ProdutoController {
     
     // Atualizar produto
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @produtoService.isOwner(#id)")
     @Operation(summary = "Atualizar produto", description = "Atualiza os dados de um produto existente")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
@@ -109,6 +112,7 @@ public class ProdutoController {
 
     // Remover Produto
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @produtoService.isOwner(#id)")
     @Operation(summary = "Remover produto", description = "Remove um produto do sistema")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Produto removido com sucesso"),

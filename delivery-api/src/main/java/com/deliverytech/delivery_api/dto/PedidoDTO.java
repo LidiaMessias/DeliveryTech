@@ -43,8 +43,7 @@ public class PedidoDTO {
     @NotEmpty(message = "Pedido deve ter pelo menos um item")
     @Valid
     private List<ItemPedidoDTO> itens;
-
-    
+   
     @NotBlank(message = "CEP é obrigatório")
     @ValidCEP
     private String cep;

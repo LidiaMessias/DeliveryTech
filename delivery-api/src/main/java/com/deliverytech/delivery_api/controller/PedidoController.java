@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,7 @@ public class PedidoController {
 
     // Criar novo pedido
     @PostMapping
+    @PreAuthorize("hasRole('CLIENTE')")
     @Operation(summary = "Criar pedido", description = "Cria um novo pedido no sistema")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso"),
@@ -80,6 +82,7 @@ public class PedidoController {
 
     // Listar pedidos com filtros
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Listar pedidos", description = "Lista pedidos com filtros opcionais e paginação")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
@@ -115,6 +118,7 @@ public class PedidoController {
 
     // Listar pedidos por restaurante
     @GetMapping("/restaurante/{restauranteId}")
+    @PreAuthorize("hasRole('RESTAURANTE')")
     @Operation(summary = "Pedidos do restaurante", description = "Lista todos os pedidos de um restaurante")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pedidos recuperados com sucesso"),
