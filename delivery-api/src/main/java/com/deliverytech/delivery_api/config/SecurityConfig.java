@@ -1,5 +1,6 @@
 package com.deliverytech.delivery_api.config;
 
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,16 +12,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-//import org.springframework.web.cors.CorsConfiguration;
-//import org.springframework.web.cors.CorsConfigurationSource;
-//import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.deliverytech.delivery_api.exception.CustomAccessDeniedHandler;
 import com.deliverytech.delivery_api.security.JwtAuthenticationFilter;
-import com.deliverytech.delivery_api.service.UsuarioDetailsServiceImpl;
+import com.deliverytech.delivery_api.service.AuthService;
+//import com.deliverytech.delivery_api.service.UsuarioDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,10 +34,14 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig  {
 
     @Autowired
-    private UsuarioDetailsServiceImpl usuarioService;
+    //private UsuarioDetailsServiceImpl usuarioService;
+    private AuthService usuarioService;
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
 
     // Definição dos caminhos que serão públicos
     private static final String[] PUBLIC_MATCHERS = {
@@ -58,7 +65,7 @@ public class SecurityConfig  {
     };
 
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {  
+    protected SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authenticationProvider) throws Exception {  
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -71,7 +78,8 @@ public class SecurityConfig  {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Permite que o H2 Console seja exibido em um frame
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
-                .authenticationProvider(authenticationProvider())
+                .exceptionHandling(exceptions -> exceptions.accessDeniedHandler(accessDeniedHandler))
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -81,20 +89,21 @@ public class SecurityConfig  {
         return configuration.getAuthenticationManager();
     }
     
+    /* 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    */
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(usuarioService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
-
-    /* 
+ 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -106,5 +115,5 @@ public class SecurityConfig  {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-        */
+        
 }

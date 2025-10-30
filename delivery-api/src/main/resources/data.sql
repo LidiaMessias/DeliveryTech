@@ -72,3 +72,7 @@ true, NOW(), 2),
 (6, 'Carlos Entregador', 'carlos@entrega.com',
 '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'ENTREGADOR',
 true, NOW(), null);
+
+-- Senha para todos os usuários acima: "senha123"
+
+ALTER TABLE usuario ALTER COLUMN id RESTART WITH 7;

@@ -12,7 +12,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.deliverytech.delivery_api.service.UsuarioDetailsServiceImpl;
+import com.deliverytech.delivery_api.service.AuthService;
+//import com.deliverytech.delivery_api.service.UsuarioDetailsServiceImpl;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     // Implementação do filtro de autenticação JWT
     @Autowired
-    private UsuarioDetailsServiceImpl usuarioService;
+    private AuthService usuarioService;
 
     @Autowired
     private JwtUtil jwtUtil;   
