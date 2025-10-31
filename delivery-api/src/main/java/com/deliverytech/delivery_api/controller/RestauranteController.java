@@ -32,7 +32,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 
@@ -40,7 +43,7 @@ import jakarta.validation.constraints.Positive;
 @RequestMapping("/api/restaurantes")
 @Validated
 @CrossOrigin(origins = "*")
-@Tag(name = "Restaurantes", description = "Operações relacionadas aos restaurantes")
+@Tag(name = "Restaurantes", description = "Operações relacionadas ao gerenciamento de restaurantes")
 public class RestauranteController {
 
     @Autowired
@@ -49,10 +52,17 @@ public class RestauranteController {
     // Cadastrar um novo restaurante
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Cadastrar restaurante", description = "Cria um novo restaurante no sistema" )
+    @Operation(
+        summary = "Cadastrar restaurante", 
+        description = "Cria um novo restaurante no sistema. Requer permissão de administrador.", 
+        security = @SecurityRequirement(name = "Bearer Authentication"), 
+        tags = {"Restaurantes"} 
+    )
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Restaurante criado com sucesso"),
         @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "401", description = "Não autorizado"),
+        @ApiResponse(responseCode = "403", description = "Acesso negado"),
         @ApiResponse(responseCode = "409", description = "Restaurante já existe")
     })
     public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> cadastrarRestaurante(
@@ -70,9 +80,12 @@ public class RestauranteController {
 
     // Listar restaurantes com filtros opcionais
     @GetMapping
-    @Operation(summary = "Listar restaurantes", description = "Lista restaurantes com filtros opcionais e paginação")
+    @Operation(summary = "Listar restaurantes", description = "Lista restaurantes com filtros opcionais e paginação", tags = {"Restaurantes"})
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
+        @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso", 
+            content = @Content(mediaType = "application/json",
+                                schema = @Schema(implementation = RestauranteResponseDTO.class)
+))
     })
     public ResponseEntity<PagedResponseWrapper<RestauranteResponseDTO>> listarRestaurantes(
         @Parameter(description = "Categoria do restaurante") @RequestParam(required = false) String categoria,
@@ -87,7 +100,7 @@ public class RestauranteController {
 
     // Buscar restaurante por ID
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar restaurante por ID", description = "Recupera um restaurante específico pelo ID")
+    @Operation(summary = "Buscar restaurante por ID", description = "Recupera um restaurante específico pelo ID", tags = {"Restaurantes"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Restaurante encontrado"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
@@ -104,7 +117,7 @@ public class RestauranteController {
     // Atualizar dados do restaurante
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RESTAURANTE') and @restauranteService.isOwner(#id))")
-    @Operation(summary = "Atualizar restaurante", description = "Atualiza os dados de um restaurante existente")
+    @Operation(summary = "Atualizar restaurante", description = "Atualiza os dados de um restaurante existente", tags = {"Restaurantes"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Restaurante atualizado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado"),
@@ -124,7 +137,7 @@ public class RestauranteController {
 
     // Alterar status do restaurante
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Ativar/Desativar restaurante", description = "Alterna o status a􀆟vo/ina􀆟vo do restaurante")
+    @Operation(summary = "Ativar/Desativar restaurante", description = "Alterna o status a􀆟vo/ina􀆟vo do restaurante", tags = {"Restaurantes"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Status alterado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
@@ -142,7 +155,7 @@ public class RestauranteController {
 
     // Buscar por categoria
     @GetMapping("/categoria/{categoria}")
-    @Operation(summary = "Buscar por categoria", description = "Lista restaurantes de uma categoria específica")
+    @Operation(summary = "Buscar por categoria", description = "Lista restaurantes de uma categoria específica", tags = {"Restaurantes"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Restaurantes encontrados")
     })

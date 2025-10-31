@@ -26,6 +26,7 @@ import com.deliverytech.delivery_api.service.ProdutoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -43,7 +44,12 @@ public class ProdutoController {
     // Cadastrar um novo produto
     @PostMapping
     @PreAuthorize("hasRole('RESTAURANTE') or hasRole('ADMIN')")
-    @Operation(summary = "Cadastrar produto", description = "Cria um novo produto no sistema")
+    @Operation(
+        summary = "Cadastrar produto", 
+        description = "Cria um novo produto no sistema",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        tags = {"Produtos"}
+    )
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
         @ApiResponse(responseCode = "400", description = "Dados inválidos"),
@@ -63,7 +69,7 @@ public class ProdutoController {
     
     // Listar produtos por restaurante
     @GetMapping("/{restauranteId}/produtos")
-    @Operation(summary = "Produtos do restaurante", description = "Lista todos os produtos de um restaurante")
+    @Operation(summary = "Produtos do restaurante", description = "Lista todos os produtos de um restaurante", tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Produtos encontrados"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
@@ -78,7 +84,7 @@ public class ProdutoController {
 
     // Buscar por ID
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar produto por ID", description = "Recupera um produto específico pelo ID")
+    @Operation(summary = "Buscar produto por ID", description = "Recupera um produto específico pelo ID", tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Produto encontrado"),
         @ApiResponse(responseCode = "404", description = "Produto não encontrado")
@@ -94,7 +100,10 @@ public class ProdutoController {
     // Atualizar produto
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @produtoService.isOwner(#id)")
-    @Operation(summary = "Atualizar produto", description = "Atualiza os dados de um produto existente")
+    @Operation(
+        summary = "Atualizar produto", 
+        description = "Atualiza os dados de um produto existente",
+        tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Produto não encontrado"),
@@ -113,7 +122,7 @@ public class ProdutoController {
     // Remover Produto
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @produtoService.isOwner(#id)")
-    @Operation(summary = "Remover produto", description = "Remove um produto do sistema")
+    @Operation(summary = "Remover produto", description = "Remove um produto do sistema", tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Produto removido com sucesso"),
         @ApiResponse(responseCode = "404", description = "Produto não encontrado"),
@@ -128,7 +137,7 @@ public class ProdutoController {
 
     // Alterar disponibilidade
     @PatchMapping("/{id}/disponibilidade")
-    @Operation(summary = "Alterar disponibilidade", description = "Alterna a disponibilidade do produto")
+    @Operation(summary = "Alterar disponibilidade", description = "Alterna a disponibilidade do produto", tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Disponibilidade alterada com sucesso"),
         @ApiResponse(responseCode = "404", description = "Produto não encontrado")
@@ -145,7 +154,7 @@ public class ProdutoController {
     
     // Buscar por categoria
     @GetMapping("/categoria/{categoria}")
-    @Operation(summary = "Buscar por categoria", description = "Lista produtos de uma categoria específica")
+    @Operation(summary = "Buscar por categoria", description = "Lista produtos de uma categoria específica", tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Produtos encontrados")
     })
@@ -159,7 +168,7 @@ public class ProdutoController {
 
     // Buscar por Nome
     @GetMapping("/buscar")
-    @Operation(summary = "Buscar por nome", description = "Busca produtos pelo nome")
+    @Operation(summary = "Buscar por nome", description = "Busca produtos pelo nome", tags = {"Produtos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
     })

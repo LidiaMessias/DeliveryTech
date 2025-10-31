@@ -37,7 +37,7 @@ public class ProdutoDTO {
     @DecimalMax(value = "500.00", message = "Preço não pode exceder R$ 500,00")
     private BigDecimal preco;
 
-    @Schema(description = "Categoria do produto", example = "Pizza", required = true)
+    @Schema(description = "Categoria/tipo de culinária do produto", example = "Pizza", required = true)
     @NotBlank(message = "A categoria é obrigatória.")
     @ValidCategoria
     //@Size(min = 3, max = 20, message = "O nome deve ter entre 3 e 20 caracteres")

@@ -34,6 +34,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -49,7 +50,12 @@ public class PedidoController {
     // Criar novo pedido
     @PostMapping
     @PreAuthorize("hasRole('CLIENTE')")
-    @Operation(summary = "Criar pedido", description = "Cria um novo pedido no sistema")
+    @Operation(
+        summary = "Criar pedido", 
+        description = "Cria um novo pedido no sistema",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        tags = {"Pedidos"}
+    )
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso"),
         @ApiResponse(responseCode = "400", description = "Dados inválidos"),
@@ -67,7 +73,7 @@ public class PedidoController {
 
     // Buscar pedido por ID
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar pedido por ID", description = "Recupera um pedido específico com todos os detalhes")
+    @Operation(summary = "Buscar pedido por ID", description = "Recupera um pedido específico com todos os detalhes", tags = {"Pedidos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pedido encontrado"),
         @ApiResponse(responseCode = "404", description = "Pedido não encontrado")
@@ -83,7 +89,12 @@ public class PedidoController {
     // Listar pedidos com filtros
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Listar pedidos", description = "Lista pedidos com filtros opcionais e paginação")
+    @Operation(
+        summary = "Listar pedidos", 
+        description = "Lista pedidos com filtros opcionais e paginação",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        tags = {"Pedidos"}
+    )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
     })
@@ -103,7 +114,7 @@ public class PedidoController {
 
     // Listar pedidos por cliente
     @GetMapping("/cliente/{clienteId}")
-    @Operation(summary = "Histórico do cliente", description = "Lista todos os pedidos de um cliente")
+    @Operation(summary = "Histórico do cliente", description = "Lista todos os pedidos de um cliente", tags = {"Pedidos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Histórico recuperado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
@@ -119,7 +130,12 @@ public class PedidoController {
     // Listar pedidos por restaurante
     @GetMapping("/restaurante/{restauranteId}")
     @PreAuthorize("hasRole('RESTAURANTE')")
-    @Operation(summary = "Pedidos do restaurante", description = "Lista todos os pedidos de um restaurante")
+    @Operation(
+        summary = "Pedidos do restaurante", 
+        description = "Lista todos os pedidos de um restaurante",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        tags = {"Pedidos"}
+    )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pedidos recuperados com sucesso"),
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
@@ -136,7 +152,7 @@ public class PedidoController {
 
     // Atualizar status do pedido 
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Atualizar status do pedido", description = "Atualiza o status de um pedido")
+    @Operation(summary = "Atualizar status do pedido", description = "Atualiza o status de um pedido", tags = {"Pedidos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Status atualizado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Pedido não encontrado"),
@@ -154,7 +170,7 @@ public class PedidoController {
 
     // Cancelar pedido
     @DeleteMapping("/{id}")
-    @Operation(summary = "Cancelar pedido", description = "Cancela um pedido se possível")
+    @Operation(summary = "Cancelar pedido", description = "Cancela um pedido se possível", tags = {"Pedidos"})
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Pedido cancelado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Pedido não encontrado"),
@@ -168,7 +184,7 @@ public class PedidoController {
     }
 
     @PostMapping("/calcular")
-    @Operation(summary = "Calcular total do pedido", description = "Calcula o total de um pedido sem salvá-lo")
+    @Operation(summary = "Calcular total do pedido", description = "Calcula o total de um pedido sem salvá-lo", tags = {"Pedidos"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Total calculado com sucesso"),
         @ApiResponse(responseCode = "400", description = "Dados inválidos"),

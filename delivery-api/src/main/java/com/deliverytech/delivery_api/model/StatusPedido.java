@@ -7,7 +7,7 @@ public enum StatusPedido {
     @Schema(description = "Pedido criado, aguardando confirmação")
     PENDENTE,    
     
-    @Schema(description = "Pedido confirmado")
+    @Schema(description = "Pedido confirmado pelo restaurante")
     CONFIRMADO,  
     
     @Schema(description = "Pedido em preparo na cozinha")

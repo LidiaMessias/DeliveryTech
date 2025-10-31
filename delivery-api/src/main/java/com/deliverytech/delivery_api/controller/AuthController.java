@@ -23,11 +23,20 @@ import com.deliverytech.delivery_api.security.JwtUtil;
 import com.deliverytech.delivery_api.security.SecurityUtils;
 import com.deliverytech.delivery_api.service.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
+@Tag(name = "Autenticação", description = "Operações de autenticação, autorização e registro de usuários")
 public class AuthController {
 
     @Autowired
@@ -43,7 +52,37 @@ public class AuthController {
     private Long jwtExpiration;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+    @Operation(summary = "Login do usuário", description = "Autentica o usuário e retorna um token JWT", tags = {"Autenticação"})
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Login realizado com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = LoginResponse.class),
+                examples = @ExampleObject(
+                    name = "Login bem-sucedido",
+                    value = """
+                    {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "tipo": "Bearer",
+                        "expiracao": 86400000,
+                        "usuario": {
+                            "id": 1,
+                            "nome": "João Silva",
+                            "email": "joao@email.com",
+                            "role": "CLIENTE"
+                        }
+                    }
+                """
+                )
+            )
+        ),
+        @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    })
+    public ResponseEntity<?> login(
+        @Parameter(description = "Dados de login do usuário")
+        @Valid @RequestBody LoginRequest loginRequest) {
         try {
             // Autenticar usuário
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -73,7 +112,33 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    @Operation(summary = "Registro de novo usuário", description = "Registra um novo usuário no sistema", tags = {"Autenticação"})
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "201",
+            description = "Usuário registrado com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = UserResponse.class),
+                examples = @ExampleObject(
+                    name = "Registro bem-sucedido",
+                    value = """
+                    {
+                        "id": 2,
+                        "nome": "Maria Souza",
+                        "email": "mariasouza@email.com",
+                        "role": "CLIENTE"
+                    }
+                    """
+                )
+            )
+        ),
+        @ApiResponse(responseCode = "400", description = "Email já está em uso"),
+        @ApiResponse(responseCode = "500", description = "Erro ao criar usuário")
+    })
+    public ResponseEntity<?> register(
+        @Parameter(description = "Dados para registro de novo usuário")
+        @Valid @RequestBody RegisterRequest registerRequest) {
         try {
             // Verificar se email já existe
             if (authService.existsByEmail(registerRequest.getEmail())) {
@@ -92,6 +157,29 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+    @Operation(summary = "Informações do usuário autenticado", description = "Recupera os detalhes do usuário atualmente autenticado", tags = {"Autenticação"})
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Detalhes do usuário recuperados com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = UserResponse.class),
+                examples = @ExampleObject(
+                    name = "Usuário autenticado",
+                    value = """
+                    {
+                        "id": 1,
+                        "nome": "João Silva",
+                        "email": "
+                        "role": "CLIENTE"
+                    }
+                    """
+                )   
+            )
+        ),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado")
+    })
     public ResponseEntity<?> getCurrentUser() {
         try {
             Usuario usuarioLogado = SecurityUtils.getCurrentUser();

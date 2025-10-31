@@ -44,13 +44,16 @@ public class PedidoDTO {
     @Valid
     private List<ItemPedidoDTO> itens;
    
+    @Schema(description = "CEP do endereço de entrega", example = "01234-567", required = true)
     @NotBlank(message = "CEP é obrigatório")
     @ValidCEP
     private String cep;
 
+    @Schema(description = "Observações adicionais para o pedido", example = "Por favor, entregar na portaria", required = false)
     @Size(max = 500, message = "Observações não podem exceder 500 caracteres")
     private String observacoes;
 
+    @Schema(description = "Forma de pagamento escolhida", example = "CARTAO_CREDITO", required = true)
     @NotBlank(message = "Forma de pagamento é obrigatória")
     @Pattern(regexp = "^(DINHEIRO|CARTAO_CREDITO|CARTAO_DEBITO|PIX)$",
     message = "Forma de pagamento deve ser: DINHEIRO, CARTAO_CREDITO, CARTAO_DEBITO ou PIX")

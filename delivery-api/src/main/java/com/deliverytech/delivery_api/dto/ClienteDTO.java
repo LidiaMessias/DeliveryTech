@@ -22,12 +22,12 @@ public class ClienteDTO {
     @Email(message = "O Email deve ter formato válido")
     private String email;
 
-    @Schema(description = "Telefone para contato", example = "13912349999")
+    @Schema(description = "Telefone para contato", example = "13912349999", required = true)
     @NotBlank(message = "Telefone é obrigatório")
     @Pattern(regexp = "\\d{10,11}", message = "Telefone deve ter 10 ou 11 dígitos")
     private String telefone;
 
-    @Schema(description = "Endereço completo do cliente", example = "Rua Amazonas, 789 - Centro")
+    @Schema(description = "Endereço completo do cliente", example = "Rua Amazonas, 789 - Centro - Rio de Janeiro - RJ", required = true, maxLength = 200)
     @NotBlank(message = "Endereço é obrigatório")
     @Size(max = 200, message = "Endereço deve ter no máximo 200 caracteres")
     private String endereco;
