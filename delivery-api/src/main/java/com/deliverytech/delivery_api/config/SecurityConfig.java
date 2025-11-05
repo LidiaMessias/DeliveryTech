@@ -61,7 +61,13 @@ public class SecurityConfig  {
         "/configuration/security",
         "/swagger-ui/**",
         "/webjars/**",
-        "/swagger-ui.html"
+        "/swagger-ui.html",
+        "/actuator/**",
+        "/dashboard/**",
+        "/dashboard.html", 
+        "/css/**", 
+        "/js/**", 
+        "/images/**"
     };
 
     @Bean
