@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     // Listar produtos por restaurante
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorRestaurante(Long restauranteId) {
         List<Produto> produtos = produtoRepository.findByRestauranteIdAndDisponivelTrue(restauranteId);
         return produtos.stream()
@@ -65,6 +68,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     // Buscar por ID
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("produtos")
     public ProdutoResponseDTO buscarProdutoPorId(Long id){
         Produto produto = produtoRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
@@ -73,6 +77,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     // Atualizar produto
     @Override
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO atualizarProduto(Long id, ProdutoDTO produtoDto) {
         Produto produtoExistente = produtoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado: " + id));
@@ -117,6 +122,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     // Buscar por categoria
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorCategoria(String categoria) {
         List<Produto> produtos = produtoRepository.findByCategoriaAndDisponivelTrue(categoria);
         return produtos.stream()
@@ -127,6 +133,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     // Buscar por nome
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorNome(String nome){
         List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCaseAndDisponivelTrue(nome);
         return produtos.stream()

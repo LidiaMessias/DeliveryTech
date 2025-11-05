@@ -45,7 +45,7 @@ public class ProdutoDTO {
    
     @Schema(description = "ID do restaurante", example = "2", required = true)
     @NotNull(message = "Restaurante é obrigatório")
-    @Positive(message = "Restaurante ID deve ser posi􀆟vo")
+    @Positive(message = "Restaurante ID deve ser positivo")
     private Long restauranteId;
 
     @Schema(description = "Disponibilidade do produto", example = "true")
