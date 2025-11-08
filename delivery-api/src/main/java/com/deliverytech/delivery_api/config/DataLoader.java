@@ -30,8 +30,18 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("=== INICIANDO CARGA DE DADOS DE TESTE ===");
 
-        inserirClientes();
-        inserirRestaurantes();
+        if (clienteRepository.count() <= 3) {
+            inserirClientes();
+        } else {
+            System.out.println("Clientes já existentes. Dados de teste não reinseridos.");
+        }
+
+        if (restauranteRepository.count() <= 3) {
+            inserirRestaurantes();
+        } else {
+            System.out.println("Restaurantes já existentes. Dados de teste não reinseridos.");
+        }
+
         //inserirProdutos();
         //inserirPedidos();
         testarConsultas();

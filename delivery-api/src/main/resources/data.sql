@@ -53,26 +53,31 @@ VALUES
 (1, 32.90, 32.90, 3, 8); -- Hot Roll
 
 -- Inserir usuários de teste
-INSERT INTO usuario (id, nome, email, senha, role, ativo, data_criacao, restaurante_id) VALUES
-(1, 'Admin Sistema', 'admin@delivery.com',
+INSERT INTO usuario (nome, email, senha, role, ativo, data_criacao, restaurante_id) VALUES
+('Admin Sistema', 'admin@delivery.com',
 '$2a$10$blZvMgvZ5M7rsAaIiZRS9O4dONth.7ft2rWGvP6WLWuFpP42r1GOS', 'ADMIN', true,
 NOW(), null),
-(2, 'João Cliente', 'joao@email.com',
+('João Cliente', 'joao@email.com',
 '$2a$10$blZvMgvZ5M7rsAaIiZRS9O4dONth.7ft2rWGvP6WLWuFpP42r1GOS', 'CLIENTE', true,
 NOW(), null),
-(3, 'Maria Cliente', 'maria@email.com',
+('Maria Cliente', 'maria@email.com',
 '$2a$10$blZvMgvZ5M7rsAaIiZRS9O4dONth.7ft2rWGvP6WLWuFpP42r1GOS', 'CLIENTE', true,
 NOW(), null),
-(4, 'Pizza Palace', 'pizza@palace.com',
+('Pizza Palace', 'pizza@palace.com',
 '$2a$10$blZvMgvZ5M7rsAaIiZRS9O4dONth.7ft2rWGvP6WLWuFpP42r1GOS', 'RESTAURANTE',
 true, NOW(), 1),
-(5, 'Burger King', 'burger@king.com',
+('Burger King', 'burger@king.com',
 '$2a$10$blZvMgvZ5M7rsAaIiZRS9O4dONth.7ft2rWGvP6WLWuFpP42r1GOS', 'RESTAURANTE',
 true, NOW(), 2),
-(6, 'Carlos Entregador', 'carlos@entrega.com',
+('Carlos Entregador', 'carlos@entrega.com',
 '$2a$10$blZvMgvZ5M7rsAaIiZRS9O4dONth.7ft2rWGvP6WLWuFpP42r1GOS', 'ENTREGADOR',
 true, NOW(), null);
 
 -- Senha para todos os usuários acima: "senha123"
 
-ALTER TABLE usuario ALTER COLUMN id RESTART WITH 7;
+-- Comando para iniciar a coluna ID com valor 7 no H2-Console
+-- ALTER TABLE usuario ALTER COLUMN id RESTART WITH 7;
+
+-- Alterar o valor inicial do Auto-increment no MySQL
+-- ALTER TABLE usuario AUTO_INCREMENT = 7;
+
