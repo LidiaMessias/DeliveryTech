@@ -1,38 +1,38 @@
 package com.deliverytech.delivery_api.controller;
 
-import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
+import com.deliverytech.delivery_api.dto.ClienteDTO;
+import com.deliverytech.delivery_api.exception.GlobalExceptionHandler;
+import com.deliverytech.delivery_api.repository.ClienteRepository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.deliverytech.delivery_api.DeliveryApiApplication;
 import com.deliverytech.delivery_api.config.TestDataConfiguration;
 import com.deliverytech.delivery_api.config.TestSecurityConfig;
-import com.deliverytech.delivery_api.service.ClienteServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 //@WebMvcTest(ClienteController.class)
 @SpringBootTest(classes = {DeliveryApiApplication.class})
 @AutoConfigureMockMvc
+@Transactional
 @ActiveProfiles("test")
-@Import({TestSecurityConfig.class, TestDataConfiguration.class})
+@Import({TestSecurityConfig.class, TestDataConfiguration.class, GlobalExceptionHandler.class})
 @DisplayName("Testes de Integração do ClienteController")
 public class ClienteControllerIT {
 
@@ -42,34 +42,38 @@ public class ClienteControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     @MockBean
-    private ClienteServiceImpl clienteService;
-    
+    private AuthenticationManager authenticationManager;
+
     private final String API_PATH = "/api/clientes";
 
     @Test
     @DisplayName("Deve criar cliente com dados válidos")
     void should_CreateCliente_When_ValidData() throws Exception {
 
-        ClienteResponseDTO novoCliente = new ClienteResponseDTO();
-        novoCliente.setNome("Maria Silva");
-        novoCliente.setEmail("maria@email.com");
-        novoCliente.setTelefone("11888888888");
+        ClienteDTO novoCliente = new ClienteDTO();
+        novoCliente.setNome("Anderson da Silva");
+        novoCliente.setEmail("anderson.silva@email.com");
+        novoCliente.setTelefone("11888887777");
+        novoCliente.setEndereco("Rua Universo Paralelo, 987 - Belas Artes - São Paulo / SP");
 
-        ClienteResponseDTO retorno = new ClienteResponseDTO();
+        /*ClienteResponseDTO retorno = new ClienteResponseDTO();
         retorno.setId(1L);
         retorno.setNome(novoCliente.getNome());
         retorno.setEmail(novoCliente.getEmail());
         retorno.setTelefone(novoCliente.getTelefone());
         
-        when(clienteService.cadastrarCliente(any())).thenReturn(retorno);
+        when(clienteService.cadastrarCliente(any())).thenReturn(retorno); */
 
         mockMvc.perform(post(API_PATH)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(novoCliente)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.nome", is("Maria Silva")))
-            .andExpect(jsonPath("$.email", is("maria@email.com")))
+            .andExpect(jsonPath("$.nome", is("Anderson da Silva")))
+            .andExpect(jsonPath("$.email", is("anderson.silva@email.com")))
             .andExpect(jsonPath("$.id", notNullValue()));
     }
 
@@ -77,66 +81,85 @@ public class ClienteControllerIT {
     @DisplayName("Deve retornar erro 400 quando dados inválidos")
     void should_ReturnBadRequest_When_InvalidData() throws Exception {
         // Nome vazio, email inválido
-        ClienteResponseDTO clienteInvalido = new ClienteResponseDTO();
+        ClienteDTO clienteInvalido = new ClienteDTO();
         clienteInvalido.setNome("");
         clienteInvalido.setEmail("email-invalido");
 
         mockMvc.perform(post(API_PATH)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(clienteInvalido)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(clienteInvalido)))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errors", hasSize(greaterThan(0))));
+            .andExpect(jsonPath("$.errorCode", is("VALIDATION_ERROR")))
+            .andExpect(jsonPath("$.details.nome", not(emptyOrNullString())))
+            .andExpect(jsonPath("$.details.email", not(emptyOrNullString())));
+
     }
 
     @Test
     @DisplayName("Deve buscar cliente por ID existente")
     void should_ReturnCliente_When_IdExists() throws Exception {
-        ClienteResponseDTO retorno = new ClienteResponseDTO();
+        /*ClienteResponseDTO retorno = new ClienteResponseDTO();
         retorno.setId(1L);
         retorno.setNome("João");
         retorno.setEmail("joao@email.com");
         retorno.setTelefone("11999999999");
 
-        when(clienteService.buscarClientePorId(1L)).thenReturn(retorno);
+        when(clienteService.buscarClientePorId(1L)).thenReturn(retorno);*/
+        Long id = clienteRepository.findAll().get(0).getId();
 
-        mockMvc.perform(get(API_PATH + "/{id}", 1L))
+        mockMvc.perform(get(API_PATH + "/{id}", id))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", is(1)))
-            .andExpect(jsonPath("$.nome", is("João")))
-            .andExpect(jsonPath("$.email", is("joao@email.com")));
+            .andExpect(jsonPath("$.id", is(id.intValue())))
+            .andExpect(jsonPath("$.nome", is("João Teste")))
+            .andExpect(jsonPath("$.email", is("joao.teste@email.com")));
     }
 
     @Test
     @DisplayName("Deve retornar 404 quando cliente não existe")
     void should_ReturnNotFound_When_ClienteNotExists() throws Exception {
-        when(clienteService.buscarClientePorId(999L))
-            .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        /*when(clienteService.buscarClientePorId(999L))
+            .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Cliente não encontrado"));*/
 
-        mockMvc.perform(get(API_PATH + "/{id}", 999L))
+        Long idInexistente = clienteRepository.findAll().stream()
+                .mapToLong(cliente -> cliente.getId())
+                .max()
+                .orElse(0L) + 100;
+
+        mockMvc.perform(get(API_PATH + "/{id}", idInexistente))
+            .andDo(print())
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.message", containsString("Cliente não encontrado")));
+            .andExpect(jsonPath("$.message", containsString("Cliente não encontrado com ID: " + idInexistente)))
+            .andExpect(jsonPath("$.errorCode", is("ENTITY_NOT_FOUND")))
+            .andExpect(jsonPath("$.status", is(404)))
+            .andExpect(jsonPath("$.path", is("/api/clientes/" + idInexistente)));
+
     }
 
+    
     @Test
     @DisplayName("Deve atualizar cliente existente")
     void should_UpdateCliente_When_ClienteExists() throws Exception {
         
-        ClienteResponseDTO updated = new ClienteResponseDTO();
-        updated.setId(1L);
+        ClienteDTO updated = new ClienteDTO();
         updated.setNome("Nome Atualizado");
         updated.setEmail("email@atualizado.com");
         updated.setTelefone("11777777777");
+        updated.setEndereco("Endereço de teste atualizado");
 
-        when(clienteService.atualizarCliente(eq(1L), any())).thenReturn(updated);
+        /*when(clienteService.atualizarCliente(eq(1L), any())).thenReturn(updated);*/
+        Long id = clienteRepository.findAll().get(0).getId();
 
-        mockMvc.perform(put(API_PATH + "/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(updated)))
+        mockMvc.perform(put(API_PATH + "/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updated)))
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(id.intValue())))
             .andExpect(jsonPath("$.nome", is("Nome Atualizado")))
+            .andExpect(jsonPath("$.email", is("email@atualizado.com")))
+            .andExpect(jsonPath("$.endereco", is("Endereço de teste atualizado")))
             .andExpect(jsonPath("$.telefone", is("11777777777")));
     }
-
+ 
 }
 
 /* 

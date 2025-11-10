@@ -16,10 +16,11 @@ import com.deliverytech.delivery_api.dto.RestauranteDTO;
 import com.deliverytech.delivery_api.dto.RestauranteResponseDTO;
 import com.deliverytech.delivery_api.exception.BusinessException;
 import com.deliverytech.delivery_api.exception.ConflictException;
+import com.deliverytech.delivery_api.exception.EntityNotFoundException;
 import com.deliverytech.delivery_api.model.Restaurante;
 import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
-import jakarta.persistence.EntityNotFoundException;
+//import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional

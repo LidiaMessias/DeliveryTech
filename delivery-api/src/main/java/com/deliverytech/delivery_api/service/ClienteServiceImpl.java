@@ -15,8 +15,8 @@ import com.deliverytech.delivery_api.exception.BusinessException;
 //import com.deliverytech.delivery_api.mapper.ClienteMapper;
 import com.deliverytech.delivery_api.model.Cliente;
 import com.deliverytech.delivery_api.repository.ClienteRepository;
-
-import jakarta.persistence.EntityNotFoundException;
+import com.deliverytech.delivery_api.exception.EntityNotFoundException;
+//import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional

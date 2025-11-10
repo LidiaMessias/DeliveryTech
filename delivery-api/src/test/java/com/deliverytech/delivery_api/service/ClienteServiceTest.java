@@ -27,7 +27,7 @@ import com.deliverytech.delivery_api.exception.BusinessException;
 import com.deliverytech.delivery_api.model.Cliente;
 import com.deliverytech.delivery_api.repository.ClienteRepository;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.deliverytech.delivery_api.exception.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testes do serviço de Cliente")

@@ -16,12 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deliverytech.delivery_api.dto.ProdutoDTO;
 import com.deliverytech.delivery_api.dto.ProdutoResponseDTO;
 import com.deliverytech.delivery_api.exception.BusinessException;
+import com.deliverytech.delivery_api.exception.EntityNotFoundException;
 import com.deliverytech.delivery_api.model.Produto;
 import com.deliverytech.delivery_api.model.Restaurante;
 import com.deliverytech.delivery_api.repository.ProdutoRepository;
 import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
-import jakarta.persistence.EntityNotFoundException;
+//import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional
