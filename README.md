@@ -92,7 +92,14 @@ Todos os endpoints da API estão documentados interativamente. Acesse esta URL n
 
 O projeto adota uma arquitetura de camadas (Layered Architecture), com ênfase na separação de responsabilidades (Controller, Service, Repository) e um pipeline de observabilidade desacoplado (Actuator/Zipkin).
 
-![Diagrama da Arquitetura do Sistema Delivery Tech API](delivery-api/images/arquitetura.png)
+<div align="center">
+    <img 
+        src="delivery-api/images/arquitetura.png" 
+        alt="Diagrama da Arquitetura do Sistema" 
+        width="60%"
+        style="display: block; margin: 0 auto;"
+    />
+</div>
 
 ## 💻 Desenvolvedor  
 
