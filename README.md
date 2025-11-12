@@ -88,12 +88,13 @@ Todos os endpoints da API estão documentados interativamente. Acesse esta URL n
 
 ---
 
-## 💻 Desenvolvedor  
-
-Lidia Messias - Arquitetura de Sistemas - Turma 04  
-Desenvolvido com JDK 17 e Spring Boot 3.5.6
 ## 📐 Arquitetura do Sistema
 
 O projeto adota uma arquitetura de camadas (Layered Architecture), com ênfase na separação de responsabilidades (Controller, Service, Repository) e um pipeline de observabilidade desacoplado (Actuator/Zipkin).
 
-![Diagrama da Arquitetura do Sistema Delivery Tech API](delivery-api/images/arquitetura-sistema.png)
+![Diagrama da Arquitetura do Sistema Delivery Tech API](delivery-api/images/arquitetura.png)
+
+## 💻 Desenvolvedor  
+
+Lidia Messias - Arquitetura de Sistemas - Turma 04  
+Desenvolvido com JDK 17 e Spring Boot 3.5.6
